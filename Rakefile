@@ -62,7 +62,6 @@ def create_package(target)
   sh "mkdir #{package_dir}/lib/file-extractor"
   sh "cp -r bin #{package_dir}/lib/file-extractor/bin"
   sh "cp -r lib #{package_dir}/lib/file-extractor/lib"
-  sh "cp -r spec #{package_dir}/lib/file-extractor/spec"
   sh "mkdir #{package_dir}/lib/ruby"
   sh "tar -xzf packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}.tar.gz -C #{package_dir}/lib/ruby"
   sh "cp packaging/wrapper.sh #{package_dir}/#{PACKAGE_NAME}"
