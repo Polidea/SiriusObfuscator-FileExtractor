@@ -2,3 +2,7 @@
 /.build
 /Packages
 /*.xcodeproj
+packaging/*
+!packaging/bundler-config
+!packaging/wrapper.sh
+file-extractor-*
