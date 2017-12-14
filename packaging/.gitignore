@@ -2,4 +2,5 @@
 /.build
 /Packages
 /*.xcodeproj
-file-extractor-*
+/vendor
+traveling-ruby*
