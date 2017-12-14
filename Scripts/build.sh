@@ -1,4 +1,9 @@
 #!/bin/bash
 
-rake package:osx
+HOMEBREW_NO_AUTO_UPDATE=1 brew install rbenv
+eval "$(rbenv init -)"
+rbenv install 2.2.2
+gem install bundler
+gem install rake
+bundle exec rake package:osx
 
