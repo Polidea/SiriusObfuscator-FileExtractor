@@ -1,0 +1,88 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run with macOS project",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/bin/file-extractor",
+            "args": [
+                "${workspaceRoot}/../TestProjects/macOSTestApp/macOSTestApp.xcodeproj"
+            ],
+            "pathToBundler": "${workspaceRoot}/bin/bundle",
+            "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
+            "useBundler": true,
+            "showDebuggerOutput": true
+        },
+        {
+            "name": "Run with iOS project",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/bin/file-extractor",
+            "args": [
+                "${workspaceRoot}/../TestProjects/iOSTestApp/iOSTestApp.xcodeproj"
+            ],
+            "pathToBundler": "${workspaceRoot}/bin/bundle",
+            "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
+            "useBundler": true,
+            "showDebuggerOutput": true
+        },
+        {
+            "name": "Run with tvOS project",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/bin/file-extractor",
+            "args": [
+                "${workspaceRoot}/../TestProjects/tvOSTestApp/tvOSTestApp.xcodeproj"
+            ],
+            "pathToBundler": "${workspaceRoot}/bin/bundle",
+            "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
+            "useBundler": true,
+            "showDebuggerOutput": true
+        },
+        {
+            "name": "Run with watchOS project",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/bin/file-extractor",
+            "args": [
+                "${workspaceRoot}/../TestProjects/watchOSTestApp/watchOSTestApp.xcodeproj"
+            ],
+            "pathToBundler": "${workspaceRoot}/bin/bundle",
+            "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
+            "useBundler": true,
+            "showDebuggerOutput": true
+        },
+        {
+            "name": "Bacon - all",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/bin/bacon",
+            "args": ["-a"],
+            "pathToBundler": "${workspaceRoot}/bin/bundle",
+            "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
+            "useBundler": true,
+            "showDebuggerOutput": true
+        },
+        {
+            "name": "Bacon - active spec file only",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/bin/bacon",
+            "args": ["${file}"],
+            "pathToBundler": "${workspaceRoot}/bin/bundle",
+            "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
+            "useBundler": true,
+            "showDebuggerOutput": true
+        }
+    ]
+}
