@@ -11,7 +11,8 @@
             "cwd": "${workspaceRoot}",
             "program": "${workspaceRoot}/bin/file-extractor",
             "args": [
-                "${workspaceRoot}/../TestProjects/macOSTestApp/macOSTestApp.xcodeproj"
+                "${workspaceRoot}/../TestProjects/macOSTestApp/macOSTestApp.xcodeproj",
+                "${workspaceRoot}/../TestProjects/macOSTestApp/extracted_files.json"
             ],
             "pathToBundler": "${workspaceRoot}/bin/bundle",
             "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
