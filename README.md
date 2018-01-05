@@ -115,7 +115,15 @@ Sample `Files.json` file might look like that:
    run application: `ruby /bin/file-extractor`  
    run tests: `/bin/bash Scripts/run_all_tests.sh`
 
-9. If you're building for further distribution, run the package preparing tool  
+9. If you're using VisualStudio Code as IDE, please ensure that the `rbenv init` is properly added to your profile   
+   for Bash: `.bashprofile` should contain `eval "$(rbenv init -)"`  
+   for Fish: `.config/fish/config.fish` should contain `status --is-interactive; and source (rbenv init -|psub)`  
+   for zsh:  `.zshrc` should contain:  
+   `export PATH="$HOME/.rbenv/bin:$PATH"`  
+   `eval "$(rbenv init -)"`  
+   Please consult `https://github.com/rbenv/rbenv/issues/815` for more information.
+
+10. If you're building for further distribution, run the package preparing tool  
    `bundle exec rake package:osx`  
    Note: parameter DIR_ONLY=1 makes the rake generate the directory with package, not the archived package
 
