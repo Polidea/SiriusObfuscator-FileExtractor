@@ -11,12 +11,12 @@ The information include the list of files containing the Swift source code that 
 ## Usage
 
 ```bash
-$ file-extractor <path-to-xcode-project> <path-to-output-file>
+$ file-extractor -projectrootpath <path-to-xcode-project> -filesjson <path-to-output-file>
 ```
 
 where
 
-`<path-to-xcode-project>` is a path to the `.xcodeproj` or `.xcworkspace` file. It's a required parameter.
+`<path-to-xcode-project>` is a path to Xcode project root folder. It\'s the folder that contains both the Xcode project file (.xcodeproj or .xcworkspace) and the source files. It's a required parameter.
 
 `<path-to-output-file>` is a path to the file that the extraced data will be written to. If it's an optional parameter. If ommited, tool will print out to the standard output.
 

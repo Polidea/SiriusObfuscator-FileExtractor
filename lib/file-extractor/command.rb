@@ -1,100 +1,70 @@
 module FileExtractor
+  require 'colored2'
+  require 'claide'
 
-  require 'xcodeproj'
-  require 'json'
+  require 'file-extractor/arguments_decorator'
+  require 'file-extractor/xcodeproj_determiner'
+  require 'file-extractor/data_extractor'
 
-  class Command 
-    def self.run(argv)
-      puts "Path to .xcodeproj:"
-      puts argv[0]
-      @data = self.getDataFromXcodeproj(argv.first)
-      @data = self.getSystemLinkedFrameworks(@data)
-      @data = self.resolveSdkPath(@data)
-      puts "\n\nFound data:\n"
-      json = @data.to_json
-      puts json
-      output = argv[1]
-      if output.nil?
-        puts "\n\nNo output file"
-      else
-        File.open("#{argv[1]}","w") do |file|
-          file.write(json)
+  class Command < CLAide::Command
+
+    self.command = 'file-extractor'
+    self.description = 'FileExtractor processes the Xcode project file and generates Files.json file based on that.'
+
+    PROJECTROOTPATH_KEY = "projectrootpath"
+    FILESJSON_KEY = "filesjson"
+
+    @file_extractor_options = [
+      ["-#{PROJECTROOTPATH_KEY}", "Path to Xcode project root folder. "\
+                        "It\'s the folder that contains both the Xcode project file (.xcodeproj or .xcworkspace) "\
+                        "and the source files."\
+                        "It\'s a required parameter."],
+      ["-#{FILESJSON_KEY}", "Path to output files.json. It\'s an optional parameter."]
+    ]
+
+    def self.options
+      all_options = @file_extractor_options + FileExtractor::ArgumentsDecorator.optionize(super)
+      all_options.select do |option| !(option.first.include? "no-ansi") end
+    end
+
+    self.arguments = [
+      CLAide::Argument.new("-#{PROJECTROOTPATH_KEY}", true),
+      CLAide::Argument.new("PROJECTROOT", true),
+      CLAide::Argument.new("-#{FILESJSON_KEY}", false),
+      CLAide::Argument.new("FILESJSON", false)
+    ]
+
+    def initialize(argv)
+      @project_root_path = File.expand_path(argv.option(PROJECTROOTPATH_KEY))
+      @files_path = File.expand_path(argv.option(FILESJSON_KEY))
+      super
+    end
+    
+    def self.run(argv = [])
+      argv = FileExtractor::ArgumentsDecorator.update_argv(argv, "--help", options)
+      super
+    end
+
+    def run
+      puts "Path to root:"
+      puts @project_root_path
+      project_paths = FileExtractor::XcodeprojDeterminer.find_xcode_files(@project_root_path)
+      if project_paths.count == 1
+        
+        puts "Path to Xcode project:"
+        puts project_paths.first
+        puts "Path to files:"
+        puts @files_path
+
+        json, output_string = FileExtractor::DataExtractor.run(project_paths.first, @files_path)
+        puts "\n\nFound data:\n#{json}"
+        puts "\n#{output_string}"
+      else 
+        puts "\n\nFound multiple possible Xcode project files:\n"
+        project_paths.each do |path|
+          puts path
         end
-        puts "\n\nData written to:"
-        puts argv[1]
-      end    
+      end
     end
-
-    def self.getDataFromXcodeproj(project_path)
-      @data = {}
-      @data[:module] = {}
-      @data[:sdk] = {}
-      @data[:filenames] = []
-      @data[:explicitelyLinkedFrameworks] = {}
-
-      project = Xcodeproj::Project.open(project_path)
-
-      # for now, the module name is the target name. ofc that's a non-generalizable assumption
-      @data[:module][:name] = project.targets.to_a.select do |target| 
-        target.instance_of? Xcodeproj::Project::Object::PBXNativeTarget
-      end.first.name
-
-      @data[:sdk] = project.targets.to_a.select do |target| 
-        target.instance_of? Xcodeproj::Project::Object::PBXNativeTarget
-      end.map do |target| 
-        @sdk = {}
-        @sdk[:name] = target.sdk
-        @sdk
-      end.first
-
-      @data[:filenames] = project.targets.to_a.select do |target| 
-        target.instance_of? Xcodeproj::Project::Object::PBXNativeTarget
-      end.flat_map do |target|
-        target.source_build_phase.files.to_a
-      end.map do |pbx_build_file|
-        pbx_build_file.file_ref.real_path.to_s
-      end.select do |path|
-        path.end_with?(".swift")
-      end.select do |path|
-        File.exists?(path)
-      end
-
-      @data[:explicitelyLinkedFrameworks] = project.targets.first.frameworks_build_phase.files.map do |framework|
-        @framework = {}
-        name = framework.file_ref.name
-        path = framework.file_ref.real_path.to_s
-        @framework[:name] = name.sub(".framework", "")
-        @framework[:path] = path.sub(name, "")
-        @framework
-      end
-
-      @data
-    end
-
-    def self.getSystemLinkedFrameworks(data)
-      data[:systemLinkedFrameworks] = []
-      explicitelyLinkedFrameworksNames = data[:explicitelyLinkedFrameworks].map do |framework| 
-        framework[:name]
-      end
-      frameworks = data[:filenames].flat_map do |file|
-        %x{ xcrun swiftc -emit-imported-modules #{file} }.split("\n").reject(&:empty?)
-      end.uniq.select do |framework|
-        !(explicitelyLinkedFrameworksNames.include? framework)
-      end
-      data[:systemLinkedFrameworks] = frameworks
-      data
-    end
-
-    def self.resolveSdkPath(data)
-      sdkName = data[:sdk][:name]
-      sdkPath = %x{ xcrun --sdk #{sdkName} --show-sdk-path }
-      data[:sdk][:path] = sdkPath.sub("\n", "")
-      data[:explicitelyLinkedFrameworks] = data[:explicitelyLinkedFrameworks].map do |framework|
-        framework[:path] = framework[:path].sub("${SDKROOT}", data[:sdk][:path])
-        framework
-      end
-      data
-    end
-
   end
 end
