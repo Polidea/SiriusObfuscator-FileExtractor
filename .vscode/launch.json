@@ -11,11 +11,11 @@
             "cwd": "${workspaceRoot}",
             "program": "${workspaceRoot}/bin/file-extractor",
             "args": [
-                // "-help"
-                "-projectrootpath",
-                "${workspaceRoot}/../TestProjects/macOS/Original/XcodeSampleProject",
-                "-filesjson",
-                "${workspaceRoot}/../files.json"
+                "-help"
+                // "-projectrootpath",
+                // "${workspaceRoot}/../TestProjects/macOS/Original/XcodeSampleProject",
+                // "-filesjson",
+                // "${workspaceRoot}/../files.json"
             ],
             "pathToBundler": "${workspaceRoot}/bin/bundle",
             "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",

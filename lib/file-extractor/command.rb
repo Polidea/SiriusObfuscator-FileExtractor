@@ -34,9 +34,18 @@ module FileExtractor
       CLAide::Argument.new("FILESJSON", false)
     ]
 
+    def extract_option(argv, key)
+      option = argv.option(key)
+      if !option.nil?
+        File.expand_path(option)
+      else
+        option
+      end
+    end
+
     def initialize(argv)
-      @project_root_path = File.expand_path(argv.option(PROJECTROOTPATH_KEY))
-      @files_path = File.expand_path(argv.option(FILESJSON_KEY))
+      @project_root_path = extract_option(argv, PROJECTROOTPATH_KEY)
+      @files_path = extract_option(argv, FILESJSON_KEY)
       super
     end
     
