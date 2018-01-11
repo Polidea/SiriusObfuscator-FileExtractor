@@ -5,17 +5,19 @@ module FileExtractor
 
   class XcodeprojExtractor
 
-    def initialize(project_path)
+    def initialize(root_path, project_path)
+      @root_path = root_path
       @project = Xcodeproj::Project.open(project_path)
     end
 
     def extract_data
       FileExtractor::FilesJson.new(
+        FileExtractor::Project.new(@root_path),
         FileExtractor::Module.new(module_name),
-        FileExtractor::Sdk.new(sdk, ""),
+        FileExtractor::Sdk.new(sdk, nil),
         filenames,
         explicitelyLinkedFrameworks,
-        []
+        nil
       )
     end
 
@@ -47,6 +49,8 @@ module FileExtractor
         path.end_with?(".swift")
       end.select do |path|
         File.exists?(path)
+      end.map do |path|
+        File.expand_path(path)
       end
     end
 

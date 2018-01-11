@@ -13,7 +13,7 @@
             "args": [
                 // "-help"
                 "-projectrootpath",
-                "${workspaceRoot}/../TestProjects/macOSTestApp/",
+                "${workspaceRoot}/../TestProjects/macOS/Original/XcodeSampleProject",
                 "-filesjson",
                 "${workspaceRoot}/../files.json"
             ],
@@ -29,7 +29,7 @@
             "cwd": "${workspaceRoot}",
             "program": "${workspaceRoot}/bin/file-extractor",
             "args": [
-                "${workspaceRoot}/../TestProjects/iOSTestApp/iOSTestApp.xcodeproj"
+                "${workspaceRoot}/../TestProjects/iOS/Original/XcodeSampleProject"
             ],
             "pathToBundler": "${workspaceRoot}/bin/bundle",
             "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
@@ -43,7 +43,7 @@
             "cwd": "${workspaceRoot}",
             "program": "${workspaceRoot}/bin/file-extractor",
             "args": [
-                "${workspaceRoot}/../TestProjects/tvOSTestApp/tvOSTestApp.xcodeproj"
+                "${workspaceRoot}/../TestProjects/tvOS/Original/XcodeSampleProject"
             ],
             "pathToBundler": "${workspaceRoot}/bin/bundle",
             "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
@@ -57,7 +57,7 @@
             "cwd": "${workspaceRoot}",
             "program": "${workspaceRoot}/bin/file-extractor",
             "args": [
-                "${workspaceRoot}/../TestProjects/watchOSTestApp/watchOSTestApp.xcodeproj"
+                "${workspaceRoot}/../TestProjects/watchOS/Original/XcodeSampleProject"
             ],
             "pathToBundler": "${workspaceRoot}/bin/bundle",
             "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",

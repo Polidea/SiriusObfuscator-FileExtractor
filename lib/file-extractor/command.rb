@@ -49,15 +49,16 @@ module FileExtractor
       puts "Path to root:"
       puts @project_root_path
       project_paths = FileExtractor::XcodeprojDeterminer.find_xcode_files(@project_root_path)
-      if project_paths.count == 1
-        
+      if project_paths.empty?
+        puts "\n\nNo Xcode project document found in the project root directory"
+      elsif project_paths.count == 1
         puts "Path to Xcode project:"
         puts project_paths.first
         puts "Path to files:"
         puts @files_path
 
-        json, output_string = FileExtractor::DataExtractor.run(project_paths.first, @files_path)
-        puts "\n\nFound data:\n#{json}"
+        json, output_string = FileExtractor::DataExtractor.extract_data(@project_root_path, project_paths.first, @files_path)
+        puts "\nFound data:\n#{json}"
         puts "\n#{output_string}"
       else 
         puts "\n\nFound multiple possible Xcode project files:\n"

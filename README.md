@@ -27,8 +27,11 @@ The input data format is defined by the Xcode project file structure and best de
 The output data format is called `Files.json` and presented below:
 
 ```javascript
-{ 
-  "module" {
+{
+  "project": {
+    "rootPath": <string>
+  },
+  "module": {
     "name": <string>
   },
   "sdk": {
@@ -45,6 +48,7 @@ The output data format is called `Files.json` and presented below:
   ]
 }
 ```
+`project` is an object that contains the path to the project root directory. This directory will be copied by the Renamer to provide place for writing the obfuscated Swift source files to.
 
 `module` is an object that contains the name of the module that the Swift source code files are part of. It's required for performing the further analysis and will be used to discriminate between the symbols from the external modules (such as linked frameworks) and the symbols that should be obfuscated.
 
@@ -60,18 +64,21 @@ Sample `Files.json` file might look like that:
 
 ```javascript
 {
-   "module":{
+   "project": {
+       "rootPath": "/Users/siejkowski/Polidea/SwiftObfuscator/TestProjects/macOSTestApp"
+   },
+   "module": {
       "name":"macOSTestApp"
    },
-   "sdk":{
+   "sdk": {
       "name":"macosx",
       "path":"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk"
    },
-   "filenames":[
+   "filenames": [
       "/Users/siejkowski/Polidea/SwiftObfuscator/TestProjects/macOSTestApp/macOSTestApp/ViewController.swift",
       "/Users/siejkowski/Polidea/SwiftObfuscator/TestProjects/macOSTestApp/macOSTestApp/AppDelegate.swift"
    ],
-   "explicitelyLinkedFrameworks":[
+   "explicitelyLinkedFrameworks": [
       {
          "name":"CoreImage",
          "path":"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/"

@@ -8,6 +8,10 @@ module FileExtractor
     end
   end
 
+  Project = Struct.new(:rootPath) do
+    include StructSerialization
+  end
+
   Module = Struct.new(:name) do
     include StructSerialization
   end
@@ -20,7 +24,7 @@ module FileExtractor
     include StructSerialization
   end
   
-  FilesJson = Struct.new(:module, :sdk, :filenames, :explicitelyLinkedFrameworks, :systemLinkedFrameworks) do
+  FilesJson = Struct.new(:project, :module, :sdk, :filenames, :explicitelyLinkedFrameworks, :systemLinkedFrameworks) do
     include StructSerialization
 
     def to_h
