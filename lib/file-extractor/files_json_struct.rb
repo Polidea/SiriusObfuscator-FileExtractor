@@ -12,7 +12,7 @@ module FileExtractor
     include StructSerialization
   end
 
-  Module = Struct.new(:name) do
+  Module = Struct.new(:name, :triple) do
     include StructSerialization
   end
 

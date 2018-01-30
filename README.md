@@ -32,7 +32,8 @@ The output data format is called `Files.json` and presented below:
     "rootPath": <string>
   },
   "module": {
-    "name": <string>
+    "name": <string>,
+    "triple": <string>
   },
   "sdk": {
     "name": <string>
@@ -50,7 +51,7 @@ The output data format is called `Files.json` and presented below:
 ```
 `project` is an object that contains the path to the project root directory. This directory will be copied by the Renamer to provide place for writing the obfuscated Swift source files to.
 
-`module` is an object that contains the name of the module that the Swift source code files are part of. It's required for performing the further analysis and will be used to discriminate between the symbols from the external modules (such as linked frameworks) and the symbols that should be obfuscated.
+`module` is an object that contains the name of the module that the Swift source code files are part of and the target triple for the compiler. It's required for performing the further analysis and will be used to discriminate between the symbols from the external modules (such as linked frameworks) and the symbols that should be obfuscated.
 
 `sdk` is an object that contains both the name and the path to the SDK that the source code will be compiled against. The name is taken from the Xcode project and used as an input for the `xcrun --sdk <sdk.name> --show-sdk-path` to obtain the path to the SDK. Sample names are: `appletvos`, `appletvsimulator`, `iphoneos`, `iphonesimulator`, `macosx`, `watchos`, `watchsimulator`.
 
