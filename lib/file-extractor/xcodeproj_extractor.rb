@@ -17,33 +17,45 @@ module FileExtractor
 
     def extract_data
       FileExtractor::FilesJson.new(
-        FileExtractor::Project.new(@root_path),
-        FileExtractor::Module.new(module_name, triple),
-        FileExtractor::Sdk.new(sdk, nil),
-        filenames,
-        explicitelyLinkedFrameworks,
+        FileExtractor::Project.new(@root_path, @project.path.to_s),
+        FileExtractor::Module.new(module_name(@main_target), triple(@main_build_settings)),
+        FileExtractor::Sdk.new(sdk(@main_target), nil),
+        source_files(@main_target),
+        layout_files(@main_target),
+        explicitly_linked_frameworks(@main_target),
         nil
       )
     end
 
     private
 
-    def module_name
-      @main_target.name
+    def module_name(target)
+      target.name
     end
 
-    def sdk
-      # for now, the module name is the target name. ofc that's a non-generalizable assumption
-      @main_target.sdk
+    def sdk(target)
+      target.sdk
     end
 
-    def filenames 
-      @all_targets.flat_map do |target|
-        target.source_build_phase.files.to_a
-      end.map do |pbx_build_file|
-        pbx_build_file.file_ref.real_path.to_s
+    def source_files(target)
+      filepaths(target.source_build_phase.files, ".swift")
+    end
+
+    def layout_files(target)
+      filepaths(target.resources_build_phase.files, ".storyboard", ".xib")
+    end
+
+    def filepaths(file_references, *extensions)
+      file_references.to_a.flat_map do |pbx_build_file|
+        if pbx_build_file.file_ref.instance_of? Xcodeproj::Project::Object::PBXFileReference
+          [pbx_build_file.file_ref.real_path.to_s]
+        elsif pbx_build_file.file_ref.instance_of? Xcodeproj::Project::Object::PBXVariantGroup
+          pbx_build_file.file_ref.files.map do |file_ref|
+            file_ref.real_path.to_s
+          end  
+        end
       end.select do |path|
-        path.end_with?(".swift")
+        !path.nil? && path.end_with?(*extensions)
       end.select do |path|
         File.exists?(path)
       end.map do |path|
@@ -51,29 +63,29 @@ module FileExtractor
       end
     end
 
-    def explicitelyLinkedFrameworks 
-      @main_target.frameworks_build_phase.files.map do |framework|
+    def explicitly_linked_frameworks(target)
+      target.frameworks_build_phase.files.map do |framework|
         name = framework.file_ref.name
         path = framework.file_ref.real_path.to_s
-        FileExtractor::ExplicitelyLinkedFramework.new(name.sub(".framework", ""), path.sub(name, ""))
+        FileExtractor::ExplicitlyLinkedFramework.new(name.sub(".framework", ""), path.sub(name, ""))
       end
     end
 
-    def triple
-      architecture = @main_build_settings["CURRENT_ARCH"]
-      sdk = case @main_build_settings["PLATFORM_NAME"]
+    def triple(build_settings)
+      architecture = build_settings["CURRENT_ARCH"]
+      sdk = case build_settings["PLATFORM_NAME"]
         when "iphoneos"
-          @main_build_settings["SDK_NAME"].gsub("iphoneos", "ios")
+          build_settings["SDK_NAME"].gsub("iphoneos", "ios")
         when "iphonesimulator"
-          @main_build_settings["SDK_NAME"].gsub("iphonesimulator", "ios")
+          build_settings["SDK_NAME"].gsub("iphonesimulator", "ios")
         when "appletvos"
-          @main_build_settings["SDK_NAME"].gsub("apple", "")
+          build_settings["SDK_NAME"].gsub("apple", "")
         when "appletvsimulator"
-          @main_build_settings["SDK_NAME"].gsub("appletvsimulator", "tvos")
+          build_settings["SDK_NAME"].gsub("appletvsimulator", "tvos")
         when "watchsimulator"
-          @main_build_settings["SDK_NAME"].gsub("simulator", "os")
+          build_settings["SDK_NAME"].gsub("simulator", "os")
         else
-          @main_build_settings["SDK_NAME"]
+          build_settings["SDK_NAME"]
         end
       "#{architecture}-apple-#{sdk}"
     end
