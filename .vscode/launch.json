@@ -12,7 +12,7 @@
             "program": "${workspaceRoot}/bin/file-extractor",
             "args": [
                 "-projectrootpath",
-                "${workspaceRoot}/../TestProjects/Dropnote",
+                "${workspaceRoot}/../TestProjects/Dropnote/Original",
                 "-filesjson",
                 "${workspaceRoot}/../files.json"
             ],
