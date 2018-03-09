@@ -48,7 +48,7 @@
                 "-projectrootpath",
                 "${workspaceRoot}/../TestProjects/iOS/Original/XcodeSampleProject",
                 "-filesjson",
-                "${workspaceRoot}/../files.json"
+                "${workspaceRoot}/../files2.json"
             ],
             "pathToBundler": "${workspaceRoot}/bin/bundle",
             "pathToRDebugIDE": "${workspaceRoot}/bin/rdebug-ide",
